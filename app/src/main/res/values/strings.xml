@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="change_description_btn_text">Click me to change text</string>
+    <string name="changed_text">CodeFresher.VN</string>
+    <string name="btn1_text">Black</string>
+    <string name="btn2_text">Blue</string>
+    <string name="btn3_text">Green</string>
+    <string name="btn4_text">Orange</string>
+    <string name="btn5_text">Red</string>
+</resources>
