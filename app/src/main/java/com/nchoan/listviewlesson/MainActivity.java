@@ -11,10 +11,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    FoodModel[] foodModels;
+    List<FoodModel> foodModels = new ArrayList<>();
+    FoodAdapter2 adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        FoodAdapter2 adapter = new FoodAdapter2(this, foodModels);
+        adapter = new FoodAdapter2(new FoodAdapter2.Callback() {
+            @Override
+            public void onClickItem(int position) {
+                adapter.selectItem(position);
+            }
+
+            @Override
+            public void onClickDeleteButton(int position) {
+                adapter.removeData(position);
+            }
+        }, foodModels);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -50,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         FoodModel chickenBurger = new FoodModel("Chicken Burger", "Burger", 350.0f, R.drawable.chicken_burger);
         FoodModel fishBurger = new FoodModel("Fish Burger", "Burger", 310.0f, R.drawable.fish_burger);
         FoodModel mangoJuice = new FoodModel("Mango Juice", "Juice", 200.0f, R.drawable.mango_juice);
-        foodModels = new FoodModel[]{spicyChickenPizza, beefBurger, chickenPizza, chickenBurger, fishBurger, mangoJuice, spicyChickenPizza, beefBurger, chickenPizza, chickenBurger, fishBurger, mangoJuice};
+        foodModels.add(spicyChickenPizza);
+        foodModels.add(beefBurger);
+        foodModels.add(chickenPizza);
+        foodModels.add(chickenBurger);
+        foodModels.add(fishBurger);
+        foodModels.add(mangoJuice);
     }
 }

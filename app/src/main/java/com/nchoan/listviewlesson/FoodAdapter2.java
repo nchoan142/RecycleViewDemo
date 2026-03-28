@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hungnm24 on 4/20/20
@@ -19,12 +20,14 @@ import java.util.ArrayList;
 
 public class FoodAdapter2 extends RecyclerView.Adapter<FoodAdapter2.ViewHolder> {
 
-    FoodModel[] foodModels;
-    Context context;
+    List<FoodModel> foodModels = new ArrayList<>();
+    Callback callback;
 
-    public FoodAdapter2(@NonNull Context context, FoodModel[] foodModels) {
+    private int selectedIndex = -1;
+
+    public FoodAdapter2(Callback callback, List<FoodModel> foodModels) {
         this.foodModels = foodModels;
-        this.context = context;
+        this.callback = callback;
     }
 
     // Trả về 1 ViewHolder chứa view mới được tạo
@@ -41,16 +44,33 @@ public class FoodAdapter2 extends RecyclerView.Adapter<FoodAdapter2.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        FoodModel item = foodModels[position];
-        setDataToView(item, holder.getView());
+        FoodModel item = foodModels.get(position);
+        setDataToView(item, holder, position);
     }
 
     @Override
     public int getItemCount() {
-        return foodModels.length;
+        return foodModels.size();
     }
 
-    private void setDataToView(FoodModel item, View view){
+    public void setData(List<FoodModel> foodModels) {
+        this.foodModels = foodModels;
+        notifyDataSetChanged();
+    }
+
+    public void selectItem(int index) {
+        selectedIndex = index;
+        notifyDataSetChanged();
+    }
+
+    public void removeData(int index) {
+        this.foodModels.remove(index);
+        notifyDataSetChanged();
+    }
+
+    private void setDataToView(final FoodModel item, final ViewHolder viewHolder, final int position){
+        View view = viewHolder.getView();
+
         TextView tvGroupName = view.findViewById(R.id.tvGroupName);
         tvGroupName.setText(item.getGroupName());
 
@@ -62,7 +82,28 @@ public class FoodAdapter2 extends RecyclerView.Adapter<FoodAdapter2.ViewHolder> 
 
         ImageView ivThumb = view.findViewById(R.id.ivThumb);
         ivThumb.setImageResource(item.getThumbnail());
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onClickItem(position);
+            }
+        });
+
+        view.findViewById(R.id.ivCheck).setVisibility(selectedIndex == position ? View.VISIBLE : View.GONE);
+//        view.findViewById(R.id.ivDelete).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                callback.onClickDeleteButton(position);
+//            }
+//        });
     }
+
+    interface Callback {
+        void onClickItem(int position);
+        void onClickDeleteButton(int position);
+    }
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         View view;
